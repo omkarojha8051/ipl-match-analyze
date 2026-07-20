@@ -4,13 +4,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_theme(style="whitegrid")
 
-# Load the dataset
+
 def load_data():
+    """Load IPL dataset from CSV file."""
     df = pd.read_csv("ipl_data.csv")
     return df
 
-#Cleaning the data 
+
 def clean_data(df): 
+    """Standardize team and city name inconsistencies across all columns."""
     name_fixes = {
     'Royal Challengers Bangalore': 'Royal Challengers Bengaluru',
     'Delhi Daredevils': 'Delhi Capitals',
@@ -20,10 +22,15 @@ def clean_data(df):
     for col in ['team1', 'team2', 'winner', 'toss_winner']:
         df[col] = df[col].replace(name_fixes)
     df['city'] = df['city'].replace('Bangalore','Bengaluru')
+    # 25 matches have no winner: 16 ties (Super Over not recorded) + 9 rain-abandoned
+# Decision: exclude winner=NaN rows only in win-count analysis, keep full dataset intac
     return df
+
+
   
-# Finding the winning pattern 
+ 
 def analyze_team_wins(df):
+    """Analyze and visualize total wins per team across all IPL seasons."""
     wins =  df['winner'].dropna().value_counts()
     print(" Team win count ")
     print(wins)
@@ -40,8 +47,10 @@ def analyze_team_wins(df):
     return df
 
 
-#finding role of toss
+
 def analyze_toss_impact(df):
+    """Analyze and visualize the impact of toss across all IPL seasons."""
+
     df['toss_win_helped'] = df['toss_winner'] == df['winner']
     print(df['toss_win_helped'].value_counts())
 
@@ -51,7 +60,7 @@ def analyze_toss_impact(df):
  
     print(df[(df['toss_win_helped'] == True)] ['toss_decision'].value_counts())
 
-# piechart
+
 
     toss = df['toss_decision'].value_counts()
     plt.figure(figsize=(12,6))
@@ -63,12 +72,13 @@ def analyze_toss_impact(df):
     return df
 
  
-#most player of the match
+
 def analyze_player_of_match(df):
+    """Analyze and visualize most player of the match across all IPL seasons."""
     print(df['player_of_match'].value_counts().head(10))
-    clumsy = df['player_of_match'].value_counts().head(10)
+    player = df['player_of_match'].value_counts().head(10)
     plt.figure(figsize=(12,6))
-    plt.bar(clumsy.index,clumsy.values)
+    plt.bar(player.index,player.values)
     plt.title("Top 10 player of the matches in the ipl")
     plt.xlabel("Players Name")
     plt.ylabel("no of player of matches")
@@ -80,13 +90,13 @@ def analyze_player_of_match(df):
 
 
 def analyze_venue_scores(df):
-    cucumber = df.groupby('venue')['team1_runs'].mean().sort_values(ascending=False).head(10)
-    cucumber.index = cucumber.index.str.split(',').str[0]
+    """Analyze and visualize most runs on a venue ."""
+    venue_impact = df.groupby('venue')['team1_runs'].mean().sort_values(ascending=False).head(10)
+    venue_impact.index = venue_impact.index.str.split(',').str[0]
 
-# barchart for venue
 
     plt.figure(figsize=(12,6))
-    plt.bar(cucumber.index,cucumber.values)
+    plt.bar(venue_impact.index,venue_impact.values)
     plt.title("Top 10 avg first inning score on venues ")
     plt.xlabel("Venue")
     plt.ylabel("Runs")
@@ -99,8 +109,9 @@ def analyze_venue_scores(df):
 
 
 
-# Finding the recent changes in ipl based on the data 
+
 def  analyze_season_runs(df):
+    """Analyze and visualize total runs per season across all IPL seasons."""
     df['total_runs'] =  df['team1_runs'] + df['team2_runs']
     season_runs =  df.groupby('season')['total_runs'].mean()
     print(season_runs)
@@ -117,6 +128,7 @@ def  analyze_season_runs(df):
 
 
 def analyze_win_margins(df):
+    """Analyze and visualize win margin trend ."""
     win_margin= df[df['win_by_runs'] != 0].groupby('season')['win_by_runs'].mean()
     win_margin = win_margin.round(2)
     print(win_margin)
@@ -132,8 +144,9 @@ def analyze_win_margins(df):
     plt.show()
     return df 
 
-    #Wins analsis on heatmap
+    
 def analyze_wins_heatmap(df):
+    """Analyze and visualize most wins by a team per season."""
     heatmap_data = df[df['winner'].notna()].pivot_table(
         index='winner',
         columns='season',
