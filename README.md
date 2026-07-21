@@ -1,5 +1,10 @@
 
 # 🏏 IPL Match Analyzer
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Pandas](https://img.shields.io/badge/Pandas-2.x-green)
+![NumPy](https://img.shields.io/badge/NumPy-2.x-lightblue)
+![Matplotlib](https://img.shields.io/badge/Matplotlib-3.x-red)
+![Seaborn](https://img.shields.io/badge/Seaborn-0.13-orange)
 
 An end-to-end data analysis project exploring every IPL match from **2008–2026** using **Python, Pandas, NumPy, Matplotlib, and Seaborn**.
 
@@ -25,7 +30,7 @@ The project uncovers insights into team performance, toss impact, venue influenc
 ![Wins Heatmap](wins_heatmap.png)
 ![Toss impact](toss_decision.png)
 ![Venue Impact](venue_avg_score.png)
-![Season rus](season_runs.png)
+![Season Runs Trend](season_runs.png)
 ![Winning Margin Trends](season_win_margin.png)
 ![Most Player Of The Matches](player_of_match.png)
 
